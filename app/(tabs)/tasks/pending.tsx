@@ -1,9 +1,10 @@
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { IconSymbol } from "@/components/ui/IconSymbol";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Checkbox } from 'expo-checkbox';
 import { useRouter } from "expo-router";
-import React, { useState } from "react";
+import React, { memo, useCallback, useEffect, useState } from "react";
 import { NativeSyntheticEvent, Pressable, ScrollView, StyleSheet, TextInput, TextInputChangeEventData, View } from "react-native";
 
 interface Todos {
@@ -14,34 +15,50 @@ interface Todos {
     _id: string;
 }
 
-function Todo({ todo, setTodos }:
+const Todo = memo(function Todo({ todo, setTodos }:
     {
         todo: Todos;
         setTodos: React.Dispatch<React.SetStateAction<Todos[]>>
     }) {
     const { content, isChecked } = todo;
 
-    // TODO: Write logic to delete Todo from localStorage
-    const deleteTodo = (_id: string) => {
-        setTodos((prev) => {
-            return prev.filter((value) => value._id !== _id)
-        })
-    }
+    const deleteTodo = useCallback(async (_id: string) => {
+        try {
+            setTodos((prev) => {
+                const updated = prev.filter((todo) => todo._id !== _id);
+                AsyncStorage.setItem('Todos', JSON.stringify(updated));
+                return updated;
+            });
+        } catch (error) {
+            console.error('Failed to delete todo:', error);
+        }
+    }, [setTodos]); // or [todos] if using `todos` inside
 
-    const handleOnValueChange = (value: boolean) => {
-        setTodos((prev) => {
-            return prev.map((val) => {
-                if (val._id === todo._id) {
-                    val.isChecked = value;
-                }
-                return val;
+
+    const handleOnValueChange = useCallback(async (value: boolean) => {
+        try {
+            setTodos((prev) => {
+                const update = prev.map((val) => {
+                    if (val._id === todo._id) {
+                        return {
+                            ...val, // clone the object
+                            isChecked: value, // update only the checkbox state
+                            checkedAt: value ? new Date() : undefined,
+                        };
+                    }
+                    return val;
+                })
+                AsyncStorage.setItem('Todos', JSON.stringify(update));
+                return update;
             })
-        })
-    }
+        } catch (error) {
+            console.error('Failed to check todo:', error);
+        }
+    }, [setTodos, todo._id])
 
     return (
         <View style={styles.todoContainer}>
-            <Pressable style={styles.deleteBtn} onPress={()=>{deleteTodo(todo._id)}}>
+            <Pressable style={styles.deleteBtn} onPress={() => { deleteTodo(todo._id) }}>
                 <IconSymbol size={20} name="trash.fill" color={'white'} style={styles.symbol} />
             </Pressable>
             <View style={styles.checkBox}>
@@ -50,34 +67,36 @@ function Todo({ todo, setTodos }:
             <ThemedText style={styles.todoContent}>{content}</ThemedText>
         </View>
     )
-}
+})
 
 
 export default function PendingScreen() {
     const router = useRouter();
     const [textState, setText] = useState<string>('');
-    //TODO: Write logic to fetch todos from localstorage.
     const [todos, setTodos] = useState<Todos[]>([
         {
-            content: 'Complete maths chapter 1',
+            content: 'Loading Tasks....',
             isChecked: false,
             createdAt: new Date(),
             _id: '1'
         },
-        {
-            content: 'Learn physics',
-            isChecked: false,
-            createdAt: new Date(),
-            _id: '2'
-        },
-        {
-            content: 'Learn react-native expo',
-            isChecked: false,
-            createdAt: new Date(),
-            _id: '3'
-        },
     ])
 
+    useEffect(() => {
+        async function fetchTodos() {
+            try {
+                const fetchedTodos = await AsyncStorage.getItem('Todos');
+                if (fetchedTodos !== null) {
+                    const parsedTodos = JSON.parse(fetchedTodos);
+                    parsedTodos && setTodos(parsedTodos);
+                }
+            } catch (error) {
+                console.error('Failed to load todos:', error);
+                // Optionally, you can set an error state here
+            }
+        }
+        fetchTodos();
+    }, [])
 
     const func = (e: NativeSyntheticEvent<TextInputChangeEventData>) => {
         setText(e.nativeEvent.text);
@@ -87,9 +106,7 @@ export default function PendingScreen() {
         router.replace("/tasks/done");
     };
 
-    const addTodo = (content: string) => {
-
-        //TODO: Write logic to add todo in localstorage.
+    const addTodo = async (content: string) => {
 
         const newTodo: Todos = {
             content: content,
@@ -98,9 +115,15 @@ export default function PendingScreen() {
             _id: Date.now().toString() + Math.random().toString(36).substr(2, 9)
         }
 
-        setTodos((prev) => {
-            return [...prev, newTodo]
-        })
+        try {
+            await AsyncStorage.setItem('Todos', JSON.stringify([...todos, newTodo]));
+            setTodos((prev) => {
+                return [...prev, newTodo]
+            })
+        } catch (error) {
+            console.log('error on adding todo');
+            console.error(error);
+        }
     }
 
 
@@ -135,7 +158,6 @@ export default function PendingScreen() {
                 }
 
             </ScrollView>
-
         </ThemedView>
     );
 }
