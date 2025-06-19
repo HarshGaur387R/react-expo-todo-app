@@ -1,79 +1,18 @@
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
+import Todo from "@/components/Todo";
 import { IconSymbol } from "@/components/ui/IconSymbol";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Checkbox } from 'expo-checkbox';
 import { useRouter } from "expo-router";
-import React, { memo, useCallback, useEffect, useState } from "react";
-import { NativeSyntheticEvent, Pressable, ScrollView, StyleSheet, TextInput, TextInputChangeEventData, View } from "react-native";
-
-interface Todos {
-    content: string;
-    isChecked: boolean;
-    createdAt: Date;
-    checkedAt?: Date;
-    _id: string;
-}
-
-const Todo = memo(function Todo({ todo, setTodos }:
-    {
-        todo: Todos;
-        setTodos: React.Dispatch<React.SetStateAction<Todos[]>>
-    }) {
-    const { content, isChecked } = todo;
-
-    const deleteTodo = useCallback(async (_id: string) => {
-        try {
-            setTodos((prev) => {
-                const updated = prev.filter((todo) => todo._id !== _id);
-                AsyncStorage.setItem('Todos', JSON.stringify(updated));
-                return updated;
-            });
-        } catch (error) {
-            console.error('Failed to delete todo:', error);
-        }
-    }, [setTodos]); // or [todos] if using `todos` inside
-
-
-    const handleOnValueChange = useCallback(async (value: boolean) => {
-        try {
-            setTodos((prev) => {
-                const update = prev.map((val) => {
-                    if (val._id === todo._id) {
-                        return {
-                            ...val, // clone the object
-                            isChecked: value, // update only the checkbox state
-                            checkedAt: value ? new Date() : undefined,
-                        };
-                    }
-                    return val;
-                })
-                AsyncStorage.setItem('Todos', JSON.stringify(update));
-                return update;
-            })
-        } catch (error) {
-            console.error('Failed to check todo:', error);
-        }
-    }, [setTodos, todo._id])
-
-    return (
-        <View style={styles.todoContainer}>
-            <Pressable style={styles.deleteBtn} onPress={() => { deleteTodo(todo._id) }}>
-                <IconSymbol size={20} name="trash.fill" color={'white'} style={styles.symbol} />
-            </Pressable>
-            <View style={styles.checkBox}>
-                <Checkbox value={isChecked} onValueChange={handleOnValueChange} />
-            </View>
-            <ThemedText style={styles.todoContent}>{content}</ThemedText>
-        </View>
-    )
-})
-
+import React, { useEffect, useState } from "react";
+import { NativeSyntheticEvent, Pressable, ScrollView, TextInput, TextInputChangeEventData, View } from "react-native";
+import styles from "./styles";
+import type TodosType from './todosType';
 
 export default function PendingScreen() {
     const router = useRouter();
     const [textState, setText] = useState<string>('');
-    const [todos, setTodos] = useState<Todos[]>([
+    const [todos, setTodos] = useState<TodosType[]>([
         {
             content: 'Loading Tasks....',
             isChecked: false,
@@ -87,16 +26,21 @@ export default function PendingScreen() {
             try {
                 const fetchedTodos = await AsyncStorage.getItem('Todos');
                 if (fetchedTodos !== null) {
-                    const parsedTodos = JSON.parse(fetchedTodos);
-                    parsedTodos && setTodos(parsedTodos);
+                    const parsed = JSON.parse(fetchedTodos);
+                    const normalized = parsed.map((t: any) => ({
+                        ...t,
+                        isChecked: Boolean(t.isChecked),
+                        createdAt: new Date(t.createdAt),
+                        checkedAt: t.checkedAt ? new Date(t.checkedAt) : undefined,
+                    }));
+                    setTodos(normalized);
                 }
             } catch (error) {
                 console.error('Failed to load todos:', error);
-                // Optionally, you can set an error state here
             }
         }
         fetchTodos();
-    }, [])
+    }, []);
 
     const func = (e: NativeSyntheticEvent<TextInputChangeEventData>) => {
         setText(e.nativeEvent.text);
@@ -108,7 +52,7 @@ export default function PendingScreen() {
 
     const addTodo = async (content: string) => {
 
-        const newTodo: Todos = {
+        const newTodo: TodosType = {
             content: content,
             isChecked: false, // By default 'isChecked' Value is false.
             createdAt: new Date(),
@@ -121,8 +65,7 @@ export default function PendingScreen() {
                 return [...prev, newTodo]
             })
         } catch (error) {
-            console.log('error on adding todo');
-            console.error(error);
+            console.error('error on adding todo: ',error);
         }
     }
 
@@ -154,98 +97,10 @@ export default function PendingScreen() {
                 showsVerticalScrollIndicator={false}
             >
                 {
-                    todos.map((t) => <Todo todo={t} setTodos={setTodos} key={t._id} />)
+                    todos.filter((t) => !t.isChecked).map((t) => <Todo todo={t} setTodos={setTodos} key={t._id} />)
                 }
 
             </ScrollView>
         </ThemedView>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#121212",
-    },
-    content: {
-        paddingHorizontal: 16,
-        paddingTop: 16,
-    },
-    link: {
-        backgroundColor: 'violet',
-        paddingVertical: 8,
-        paddingHorizontal: 12,
-        borderRadius: 8,
-        alignSelf: 'flex-start',
-    },
-    linkText: {
-        color: 'white',
-        fontWeight: 'bold',
-    },
-    inputContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingHorizontal: 16,
-        paddingVertical: 10,
-        gap: 8,
-    },
-    input: {
-        flex: 1,
-        backgroundColor: '#333',
-        color: 'white',
-        borderColor: '#888',
-        borderWidth: 1,
-        borderRadius: 8,
-        paddingHorizontal: 12,
-        paddingVertical: 10,
-        fontSize: 16,
-    },
-    addBtn: {
-        width: 50,
-        height: 50,
-        backgroundColor: 'violet',
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: 25,
-        borderColor: 'white',
-        borderWidth: 1,
-    },
-    symbol: {
-        textAlign: 'center',
-    },
-    TodosListContainer: {
-        flex: 1,
-        paddingHorizontal: 16,
-    },
-    todosContent: {
-        paddingBottom: 100,
-        gap: 12,
-    },
-    todoContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: 'violet',
-        borderWidth: 1,
-        borderColor: 'white',
-        borderRadius: 10,
-        padding: 12,
-        gap: 10,
-    },
-    checkBox: {
-        marginTop: 3,
-        alignSelf: 'baseline'
-    },
-    todoContent: {
-        color: 'white',
-        flexShrink: 1,
-        flexWrap: 'wrap',
-        fontSize: 16,
-    },
-    deleteBtn: {
-        color: 'red',
-        position: 'absolute',
-        top: 0,
-        right: 0,
-        padding: 3
-    }
-});
