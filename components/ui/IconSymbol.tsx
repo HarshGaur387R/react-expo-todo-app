@@ -21,7 +21,9 @@ const MAPPING = {
   'checklist.checked' : 'checklist',
   'note': 'notes',
   'plus.app.fill':'add',
-  'trash.fill': 'delete'
+  'trash.fill': 'delete',
+  'pencil.circle.fill': 'note-add',
+  'backward':'arrow-back'
 } as IconMapping;
 
 /**

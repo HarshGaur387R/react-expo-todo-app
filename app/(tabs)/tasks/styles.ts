@@ -88,6 +88,15 @@ const styles = StyleSheet.create({
         top: 0,
         right: 0,
         padding: 3
+    },
+    addNoteBtn: {
+        flexDirection: 'row',
+        backgroundColor: 'violet',
+        paddingVertical: 8,
+        paddingHorizontal: 12,
+        borderRadius: 8,
+        alignSelf: 'flex-start',
+        alignItems:'center'
     }
 });
 
