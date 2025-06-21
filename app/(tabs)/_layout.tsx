@@ -35,17 +35,17 @@ export default function TabLayout() {
         }),
       }}>
       <Tabs.Screen
-        name="tasks"
-        options={{
-          title: getTasksTitle(),
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="checklist.checked" color={color} />,
-        }}
-      />
-      <Tabs.Screen
         name="notes"
         options={{
           title: 'Notes',
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="note" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="tasks"
+        options={{
+          title: getTasksTitle(),
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="checklist.checked" color={color} />,
         }}
       />
     </Tabs>
