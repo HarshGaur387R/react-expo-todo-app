@@ -1,23 +1,111 @@
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { router } from "expo-router";
-import React from "react";
-import { Pressable, View } from "react-native";
-import styles from "../tasks/styles";
 import { IconSymbol } from "@/components/ui/IconSymbol";
-export default function AddNoteScreen(){
+import { router } from "expo-router";
+import React, { useState } from "react";
+import { NativeSyntheticEvent, Pressable, ScrollView, TextInput, TextInputChangeEventData, View } from "react-native";
+import styles from "./styles";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+interface NoteType {
+    _id: string;
+    title: string;
+    content: string;
+    createdAt: Date;
+}
+
+export default function AddNoteScreen() {
+
+    const [textState, setText] = useState<string>(''); // For title
+    const [content, setContent] = useState<string>('');
+
+
+    const func = (e: NativeSyntheticEvent<TextInputChangeEventData>) => {
+        setText(e.nativeEvent.text);
+    }
+
+    const handleContentOnChange = (e: NativeSyntheticEvent<TextInputChangeEventData>) => {
+        setContent(e.nativeEvent.text);
+    }
+
+    const handleOnSave = async () => {
+        if (content?.length < 1 || textState.length < 1) return;
+        try {
+            const newNote: NoteType = {
+                _id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
+                createdAt: new Date(),
+                content: content,
+                title: textState
+            }
+
+            const fetchedNotes = await AsyncStorage.getItem('notes');
+
+            if (fetchedNotes !== null) {
+                const parsed = JSON.parse(fetchedNotes);
+                await AsyncStorage.setItem('notes', JSON.stringify([...parsed, newNote]))
+
+                router.replace("/notes");
+                return;
+            }
+
+            await AsyncStorage.setItem('notes', JSON.stringify([newNote]));
+            router.replace("/notes");
+
+        } catch (error) {
+            console.log('Failed to save notes:', error);
+        }
+    }
+
+    const handleOnDiscard = () => {
+        setContent('');
+        setText('');
+    }
+
     const navigateToBack = () => {
         router.replace("/notes");
     };
 
     return (
-        <ThemedView style={styles.container}>
-            <View style={styles.content}>
-                <Pressable onPress={navigateToBack} style={styles.addNoteBtn}>
-                    <IconSymbol size={20} name="backward" color={'white'} style={styles.symbol} />
-                    <ThemedText style={styles.linkText}>Go Back</ThemedText>
-                </Pressable>
-            </View>
-        </ThemedView>
+        <ScrollView contentContainerStyle={{ paddingBottom: 60 }}>
+            <ThemedView style={styles.container}>
+                <View style={styles.content}>
+                    <Pressable onPress={navigateToBack} style={styles.addNoteBtn}>
+                        <IconSymbol size={20} name="backward" color={'white'} style={styles.symbol} />
+                        <ThemedText style={styles.linkText}>Go Back</ThemedText>
+                    </Pressable>
+                </View>
+                <View style={[styles.inputsContainer, { paddingTop: 10 }]}>
+                    <TextInput autoCorrect={false} onChange={func} value={textState} placeholder="Write Title" style={[styles.input, { minHeight: 50, maxHeight: 50 }]} placeholderTextColor={'gray'} maxLength={50} />
+
+                    <TextInput
+                        autoCorrect={false}
+                        onChange={handleContentOnChange}
+                        value={content}
+                        placeholder="Write Your Note Here."
+                        style={[styles.input, { minHeight: 150 }]}
+                        placeholderTextColor={'gray'}
+                        multiline={true}
+                        textAlignVertical="top"
+                    />
+                </View>
+                <View style={[styles.containerForButtons, { paddingHorizontal: 10, paddingTop: 15 }]}>
+                    <Pressable style={({ pressed }) => [
+                        styles.button,
+                        {
+                            opacity: pressed ? 0.7 : 1,
+                            transform: [{ scale: pressed ? 0.97 : 1 }]
+                        }]}
+                        android_ripple={{ color: '#cccccc', radius: 20 }}
+                        onPress={handleOnSave}>
+                        <ThemedText style={styles.linkText}>Save</ThemedText>
+                    </Pressable>
+
+                    <Pressable style={[styles.button, { backgroundColor: 'red' }]}
+                        onPress={handleOnDiscard}>
+                        <ThemedText style={styles.linkText}>Discard</ThemedText>
+                    </Pressable>
+                </View>
+            </ThemedView>
+        </ScrollView>
     );
 }

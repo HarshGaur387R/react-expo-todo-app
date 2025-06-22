@@ -32,17 +32,6 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         gap: 8,
     },
-    input: {
-        flex: 1,
-        backgroundColor: '#333',
-        color: 'white',
-        borderColor: '#888',
-        borderWidth: 1,
-        borderRadius: 8,
-        paddingHorizontal: 12,
-        paddingVertical: 10,
-        fontSize: 16,
-    },
     addBtn: {
         width: 50,
         height: 50,
@@ -64,12 +53,12 @@ const styles = StyleSheet.create({
         paddingHorizontal: 6,
         flexDirection: 'row',
         flexWrap: 'wrap',
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
         paddingBottom: 100,
         gap: 15,
     },
 
-    linkContainer: {
+    mainContainer: {
         width: '45%',
         minHeight: 215,
         maxHeight: 215,
@@ -93,6 +82,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
     },
     noteTitle: {
+        width: '100%',
         fontSize: 18,
         fontWeight: '600',
         backgroundColor: '#D86DD8',
@@ -106,14 +96,19 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     noteFooter: {
+        flexDirection: 'row',
         fontFamily: 'mono',
+        width: '100%',
+        justifyContent: 'space-between',
+        alignItems:'center'
+    },
+    noteFooterDate: {
         fontSize: 12,
         backgroundColor: '#D86DD8',
         paddingHorizontal: 4,
-        width: '100%'
     },
     deleteBtn: {
-        color: 'red',
+        zIndex: 1000,
         position: 'absolute',
         top: 0,
         right: 0,
@@ -127,7 +122,36 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         alignSelf: 'flex-start',
         alignItems: 'center'
-    }
+    },
+    inputsContainer: {
+        flex: 1,
+        flexDirection: 'column',
+        paddingHorizontal: 10,
+        gap: 20
+    },
+    input: {
+        backgroundColor: '#333',
+        color: 'white',
+        borderColor: '#888',
+        borderWidth: 1,
+        borderRadius: 8,
+        paddingHorizontal: 12,
+        paddingVertical: 10,
+        fontSize: 16,
+    },
+    containerForButtons: {
+        flex: 1,
+        flexDirection: 'row-reverse',
+        gap: 10
+    },
+    button: {
+        backgroundColor: 'violet',
+        paddingVertical: 8,
+        paddingHorizontal: 12,
+        borderRadius: 8,
+        alignItems: 'center'
+    },
+
 });
 
 export default styles
