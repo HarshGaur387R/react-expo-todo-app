@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
         fontFamily: 'mono',
         width: '100%',
         justifyContent: 'space-between',
-        alignItems:'center'
+        alignItems: 'center'
     },
     noteFooterDate: {
         fontSize: 12,
@@ -151,6 +151,31 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         alignItems: 'center'
     },
+
+    notePage: {
+        padding: 10,
+    },
+
+    notePageContent: {
+        padding: 10,
+        backgroundColor: '#202020',
+        borderLeftWidth: 4,
+        borderLeftColor: 'violet'
+    },
+
+    notePageFooterDate: {
+        fontFamily: 'mono',
+        fontSize: 12,
+        paddingTop: 20,
+        color: 'gray'
+    },
+
+    notePageFooterTime: {
+        fontFamily: 'mono',
+        fontSize: 12,
+        paddingTop: 0,
+        color: 'gray'
+    }
 
 });
 

@@ -65,7 +65,7 @@ export default function PendingScreen() {
                 return [...prev, newTodo]
             })
         } catch (error) {
-            console.error('error on adding todo: ',error);
+            console.error('error on adding todo: ', error);
         }
     }
 
@@ -78,7 +78,7 @@ export default function PendingScreen() {
                 </Pressable>
             </View>
             <View style={styles.inputContainer}>
-                <TextInput autoCorrect={false} onChange={func} value={textState} placeholder="Add Task" style={styles.input} />
+                <TextInput autoCorrect={false} onChange={func} value={textState} placeholder="Add Task" style={styles.input} placeholderTextColor={'gray'} />
                 <Pressable style={({ pressed }) => [
                     styles.addBtn,
                     {
