@@ -31,8 +31,9 @@ export default function AddNoteScreen() {
     const handleOnSave = async () => {
         if (content?.length < 1 || textState.length < 1) return;
         try {
+            const randomStr = Math.random().toString(36).slice(2, 11);
             const newNote: NoteType = {
-                _id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
+                _id: Date.now().toString() + randomStr,
                 createdAt: new Date(),
                 content: content,
                 title: textState

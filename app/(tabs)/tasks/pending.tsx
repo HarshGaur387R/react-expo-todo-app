@@ -52,11 +52,12 @@ export default function PendingScreen() {
 
     const addTodo = async (content: string) => {
 
+        const randomStr = Math.random().toString(36).slice(2, 11);
         const newTodo: TodosType = {
             content: content,
             isChecked: false, // By default 'isChecked' Value is false.
             createdAt: new Date(),
-            _id: Date.now().toString() + Math.random().toString(36).substr(2, 9)
+            _id: Date.now().toString() + randomStr
         }
 
         try {
