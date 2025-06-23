@@ -1,4 +1,4 @@
-import { Link, router, Stack } from 'expo-router';
+import { router, Stack } from 'expo-router';
 import { Pressable, StyleSheet } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
@@ -6,7 +6,7 @@ import { ThemedView } from '@/components/ThemedView';
 
 export default function NotFoundScreen() {
   const navigateToHome = () => {
-    router.replace("/tasks/pending");
+    router.replace("/(tabs)/tasks");
   };
   return (
     <>

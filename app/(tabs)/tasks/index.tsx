@@ -9,17 +9,10 @@ import { NativeSyntheticEvent, Pressable, ScrollView, TextInput, TextInputChange
 import styles from "./styles";
 import type TodosType from './todosType';
 
-export default function PendingScreen() {
+export default function Page() {
     const router = useRouter();
     const [textState, setText] = useState<string>('');
-    const [todos, setTodos] = useState<TodosType[]>([
-        {
-            content: 'Loading Tasks....',
-            isChecked: false,
-            createdAt: new Date(),
-            _id: '1'
-        },
-    ])
+    const [todos, setTodos] = useState<TodosType[]>([])
 
     useEffect(() => {
         async function fetchTodos() {
@@ -98,7 +91,7 @@ export default function PendingScreen() {
                 showsVerticalScrollIndicator={false}
             >
                 {
-                    todos.filter((t) => !t.isChecked).map((t) => <Todo todo={t} setTodos={setTodos} key={t._id} />)
+                    todos.length > 0 ? (todos.filter((t) => !t.isChecked).map((t) => <Todo todo={t} setTodos={setTodos} key={t._id} />)) : <ThemedText style={{ paddingTop: 10 }}>No Todos Found! 🥱</ThemedText>
                 }
 
             </ScrollView>

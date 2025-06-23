@@ -1,4 +1,4 @@
-import { Tabs, usePathname } from 'expo-router';
+import { Tabs } from 'expo-router';
 import React from 'react';
 import { Platform } from 'react-native';
 
@@ -10,14 +10,8 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
-  const pathname = usePathname();
 
   // Get the current screen name from the pathname
-  const getTasksTitle = () => {
-    if (pathname.includes('pending')) return 'Tasks - Pending';
-    if (pathname.includes('done')) return 'Tasks - Done';
-    return 'Tasks';
-  };
 
   return (
     <Tabs
@@ -28,16 +22,20 @@ export default function TabLayout() {
         tabBarBackground: TabBarBackground,
         tabBarStyle: Platform.select({
           ios: {
-            // Use a transparent background on iOS to show the blur effect
             position: 'absolute',
           },
           default: {},
         }),
       }}>
       <Tabs.Screen
+        name="index"
+        // Hide this screen from the tab bar and header
+        options={{ href: null, headerShown: false }}
+      />
+      <Tabs.Screen
         name="tasks"
         options={{
-          title: getTasksTitle(),
+          title: 'Tasks',
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="checklist.checked" color={color} />,
         }}
       />

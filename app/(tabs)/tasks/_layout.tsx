@@ -16,7 +16,7 @@ export default function TasksLayout() {
                 }}
             >
                 <Stack.Screen
-                    name="pending"
+                    name="index"
                     options={{
                         title: 'Pending Tasks',
                     }}

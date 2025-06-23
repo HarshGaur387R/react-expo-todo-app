@@ -35,22 +35,13 @@ export default function DoneScreen() {
 
 
     const navigateToPending = () => {
-        router.replace("/tasks/pending");
+        router.replace("/(tabs)/tasks");
     };
 
-    if (todos.length === 0) {
-        return (
-            <ThemedView style={styles.container}>
-                <ThemedText>
-                    Loading....
-                </ThemedText>
-            </ThemedView>
-        )
-    }
 
     return (
         <ThemedView style={styles.container}>
-            <View style={[styles.content, {paddingBottom: 16}]}>
+            <View style={[styles.content, { paddingBottom: 16 }]}>
                 <Pressable onPress={navigateToPending} style={styles.link}>
                     <ThemedText style={styles.linkText}>Check pending Tasks?</ThemedText>
                 </Pressable>
@@ -62,7 +53,7 @@ export default function DoneScreen() {
                 showsVerticalScrollIndicator={false}
             >
                 {
-                    todos?.filter((t) => t.isChecked).map((t) => <Todo todo={t} setTodos={setTodos} key={t._id} />)
+                    todos.length > 0 ? (todos.filter((t) => t.isChecked).map((t) => <Todo todo={t} setTodos={setTodos} key={t._id} />)) : <ThemedText style={{ paddingTop: 10 }}>No Todos Found! 🥱</ThemedText>
                 }
             </ScrollView>
         </ThemedView>
