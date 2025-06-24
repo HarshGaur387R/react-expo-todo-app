@@ -6,7 +6,7 @@ import { ThemedView } from '@/components/ThemedView';
 
 export default function NotFoundScreen() {
   const navigateToHome = () => {
-    router.replace("/(tabs)/tasks");
+    router.replace("/(tabs)/(tasks)");
   };
   return (
     <>

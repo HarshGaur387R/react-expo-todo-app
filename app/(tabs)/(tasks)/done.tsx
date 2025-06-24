@@ -35,7 +35,7 @@ export default function DoneScreen() {
 
 
     const navigateToPending = () => {
-        router.replace("/(tabs)/tasks");
+        router.replace("/(tabs)/(tasks)");
     };
 
 

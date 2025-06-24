@@ -40,7 +40,7 @@ export default function Page() {
     }
 
     const navigateToDone = () => {
-        router.replace("/tasks/done");
+        router.replace("/(tasks)/done");
     };
 
     const addTodo = async (content: string) => {

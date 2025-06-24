@@ -145,6 +145,7 @@ const styles = StyleSheet.create({
         gap: 10
     },
     button: {
+        height:40,
         backgroundColor: 'violet',
         paddingVertical: 8,
         paddingHorizontal: 12,

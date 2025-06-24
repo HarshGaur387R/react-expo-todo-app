@@ -1,9 +1,9 @@
-import styles from "@/app/(tabs)/tasks/styles";
+import styles from "@/app/(tabs)/(tasks)/styles";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Checkbox } from "expo-checkbox";
 import { memo, useCallback } from "react";
 import { Pressable, View } from 'react-native';
-import Todos from '../app/(tabs)/tasks/todosType';
+import Todos from '../app/(tabs)/(tasks)/todosType';
 import { ThemedText } from "./ThemedText";
 import { IconSymbol } from "./ui/IconSymbol";
 

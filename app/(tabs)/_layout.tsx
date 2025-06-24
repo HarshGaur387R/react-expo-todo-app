@@ -28,12 +28,7 @@ export default function TabLayout() {
         }),
       }}>
       <Tabs.Screen
-        name="index"
-        // Hide this screen from the tab bar and header
-        options={{ href: null, headerShown: false }}
-      />
-      <Tabs.Screen
-        name="tasks"
+        name="(tasks)"
         options={{
           title: 'Tasks',
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="checklist.checked" color={color} />,
