@@ -1,50 +1,71 @@
-# Welcome to your Expo app 👋
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+![icon](assets\images\splash-icon.png)
 
-## Get started
+---
 
-1. Install dependencies
+# React Expo Todo App
 
+A simple and efficient Todo/Note-taking app built with **React Native** and the **Expo** framework.
+
+## Features
+
+- 📝 Add, edit, and delete todos and notes
+- 📋 Use as a personal todo list or a note-taking app
+- 💾 All data is stored locally using AsyncStorage—no internet required!
+- ⚡ Built with TypeScript for type safety and maintainability
+- 📱 Smooth and responsive UI for mobile devices
+
+## Installation
+
+1. **Clone the repository:**
    ```bash
-   npm install
+   git clone https://github.com/HarshGaur387R/react-expo-todo-app.git
+   cd react-expo-todo-app
    ```
 
-2. Start the app
+2. **Install dependencies:**
+   ```bash
+   npm install
+   # or
+   yarn install
+   ```
 
+3. **Start the Expo development server:**
    ```bash
    npx expo start
    ```
 
-In the output, you'll find options to open the app in a
+4. **Run the app:**
+   - Use the Expo Go app on your mobile device to scan the QR code.
+   - Or run on an emulator/simulator from Expo DevTools.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## Usage
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+- Add new todos or notes from the main screen.
+- Easy one click delete functionality.
+- All your data is saved locally on your device via AsyncStorage.
 
-## Get a fresh project
+## Technologies Used
 
-When you're ready, run:
+- **React Native** & **Expo**  
+- **TypeScript**
+- **AsyncStorage** (for local data persistence)
+- **JavaScript**
 
-```bash
-npm run reset-project
-```
+## Screenshots
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+- **Todos**
 
-## Learn more
+![todo working](gifs\part1.gif)
 
-To learn more about developing your project with Expo, look at the following resources:
+---
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+- **Notes**
 
-## Join the community
+![note working](gifs\part2.gif)
 
-Join our community of developers creating universal apps.
+## License
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+[MIT](LICENSE)
+
+---
