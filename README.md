@@ -1,5 +1,5 @@
 
-![icon](assets\images\splash-icon.png)
+![icon](assets/images/splash-icon.png)
 
 ---
 
@@ -56,13 +56,13 @@ A simple and efficient Todo/Note-taking app built with **React Native** and the 
 
 - **Todos**
 
-![todo working](gifs\part1.gif)
+![todo working](gifs/part1.gif)
 
 ---
 
 - **Notes**
 
-![note working](gifs\part2.gif)
+![note working](gifs/part2.gif)
 
 ## License
 
