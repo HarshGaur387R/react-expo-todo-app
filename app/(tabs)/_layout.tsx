@@ -15,7 +15,6 @@ export default function TabLayout() {
 
   return (
     <Tabs
-      initialRouteName="notes" // Change it back to (tasks) for production.
       screenOptions={{
       tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
       headerShown: true,

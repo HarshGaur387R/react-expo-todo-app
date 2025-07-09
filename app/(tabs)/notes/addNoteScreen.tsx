@@ -1,5 +1,4 @@
 import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
 import { IconSymbol } from "@/components/ui/IconSymbol";
 import { router } from "expo-router";
 import React, { useState } from "react";
@@ -69,7 +68,7 @@ export default function AddNoteScreen() {
 
     return (
         <ScrollView contentContainerStyle={{ paddingBottom: 60 }}>
-            <ThemedView style={styles.container}>
+            <View style={styles.container}>
                 <View style={styles.content}>
                     <Pressable onPress={navigateToBack} style={styles.addNoteBtn}>
                         <IconSymbol size={20} name="backward" color={'white'} style={styles.symbol} />
@@ -107,7 +106,7 @@ export default function AddNoteScreen() {
                         <ThemedText style={styles.linkText}>Discard</ThemedText>
                     </Pressable>
                 </View>
-            </ThemedView>
+            </View>
         </ScrollView>
     );
 }
