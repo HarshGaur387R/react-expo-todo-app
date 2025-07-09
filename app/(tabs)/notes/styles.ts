@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
 
     notePageContent: {
         padding: 10,
-        backgroundColor: '#202020',
+        // backgroundColor:"#d6d3d3",
         borderLeftWidth: 4,
         borderLeftColor: 'violet'
     },

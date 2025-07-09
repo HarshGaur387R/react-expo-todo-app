@@ -44,29 +44,29 @@ const NotePage = () => {
     }, [id])
 
     return (
-        <ScrollView contentContainerStyle={styles.notePage}>
-            <ThemedText type='title' style={{ paddingVertical: 10 }}>
-                {note?.title}
-            </ThemedText>
+            <ScrollView contentContainerStyle={styles.notePage}>
+                <ThemedText type='title' style={{ paddingVertical: 10 }}>
+                    {note?.title}
+                </ThemedText>
 
-            <ThemedText style={styles.notePageContent}>
-                {note?.content}
-            </ThemedText>
+                <ThemedText style={styles.notePageContent}>
+                    {note?.content}
+                </ThemedText>
 
-            <ThemedText style={styles.notePageFooterDate}>
-                {`${note?.createdAt.getDate().toString()}/${note?.createdAt.getMonth().toString()}/${note?.createdAt.getFullYear().toString()}`}
-            </ThemedText>
+                <ThemedText style={styles.notePageFooterDate}>
+                    {`${note?.createdAt.getDate().toString()}/${note?.createdAt.getMonth().toString()}/${note?.createdAt.getFullYear().toString()}`}
+                </ThemedText>
 
-            <ThemedText style={styles.notePageFooterTime}>
-                {note
-                    ? `${note.createdAt.toLocaleTimeString([], {
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        hour12: true
-                    })}`
-                    : ""}
-            </ThemedText>
-        </ScrollView>
+                <ThemedText style={styles.notePageFooterTime}>
+                    {note
+                        ? `${note.createdAt.toLocaleTimeString([], {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            hour12: true
+                        })}`
+                        : ""}
+                </ThemedText>
+            </ScrollView>
     )
 }
 
