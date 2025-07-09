@@ -3,7 +3,6 @@ import { StyleSheet } from "react-native";
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "black",
     },
     content: {
         // flex: 1, // <-- Add this line
@@ -32,8 +31,6 @@ const styles = StyleSheet.create({
     },
     input: {
         flex: 1,
-        backgroundColor: '#333',
-        color: 'white',
         borderColor: '#888',
         borderWidth: 1,
         borderRadius: 8,

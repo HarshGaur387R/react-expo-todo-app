@@ -5,9 +5,10 @@ import { IconSymbol } from "@/components/ui/IconSymbol";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { NativeSyntheticEvent, Pressable, ScrollView, TextInput, TextInputChangeEventData, View } from "react-native";
+import { NativeSyntheticEvent, Pressable, ScrollView, TextInputChangeEventData, View } from "react-native";
 import styles from "./styles";
 import type TodosType from './todosType';
+import { ThemedInput } from "@/components/ThemedInput";
 
 export default function Page() {
     const router = useRouter();
@@ -45,6 +46,8 @@ export default function Page() {
 
     const addTodo = async (content: string) => {
 
+        if (textState.length < 1) return;
+
         const randomStr = Math.random().toString(36).slice(2, 11);
         const newTodo: TodosType = {
             content: content,
@@ -72,7 +75,9 @@ export default function Page() {
                 </Pressable>
             </View>
             <View style={styles.inputContainer}>
-                <TextInput autoCorrect={false} onChange={func} value={textState} placeholder="Add Task" style={styles.input} placeholderTextColor={'gray'} />
+
+                <ThemedInput autoCorrect={false} onChange={func} value={textState} placeholder="Add Task" style={styles.input} placeholderTextColor={'gray'} />
+
                 <Pressable style={({ pressed }) => [
                     styles.addBtn,
                     {

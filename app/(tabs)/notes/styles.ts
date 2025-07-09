@@ -3,11 +3,10 @@ import { StyleSheet } from "react-native";
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "black",
     },
     content: {
         // flex: 1, // <-- Add this line
-        backgroundColor: 'black',
+        // backgroundColor: 'black',
         flexDirection: 'column',
         justifyContent: 'flex-start',
         paddingHorizontal: 16,
