@@ -3,9 +3,10 @@ import { ThemedView } from "@/components/ThemedView";
 import { IconSymbol } from "@/components/ui/IconSymbol";
 import { router } from "expo-router";
 import React, { useState } from "react";
-import { NativeSyntheticEvent, Pressable, ScrollView, TextInput, TextInputChangeEventData, View } from "react-native";
+import { NativeSyntheticEvent, Pressable, ScrollView, TextInputChangeEventData, View } from "react-native";
 import styles from "./styles";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ThemedInput } from "@/components/ThemedInput";
 
 interface NoteType {
     _id: string;
@@ -76,9 +77,9 @@ export default function AddNoteScreen() {
                     </Pressable>
                 </View>
                 <View style={[styles.inputsContainer, { paddingTop: 10 }]}>
-                    <TextInput autoCorrect={false} onChange={func} value={textState} placeholder="Write Title" style={[styles.input, { minHeight: 50, maxHeight: 50 }]} placeholderTextColor={'gray'} maxLength={50} />
+                    <ThemedInput autoCorrect={false} onChange={func} value={textState} placeholder="Write Title" style={[styles.input, { minHeight: 50, maxHeight: 50 }]} placeholderTextColor={'gray'} maxLength={50} />
 
-                    <TextInput
+                    <ThemedInput
                         autoCorrect={false}
                         onChange={handleContentOnChange}
                         value={content}

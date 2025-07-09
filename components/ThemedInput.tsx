@@ -3,11 +3,14 @@ import { NativeSyntheticEvent, TextInput, TextInputChangeEventData, type TextPro
 import { useThemeColor } from '@/hooks/useThemeColor';
 
 export type ThemedTextProps = TextProps & {
-    autoCorrect? : boolean;
-    onChange?: (e: NativeSyntheticEvent<TextInputChangeEventData>)=>void;
+    autoCorrect?: boolean;
+    onChange?: (e: NativeSyntheticEvent<TextInputChangeEventData>) => void;
     value?: string;
     placeholder?: string;
-    placeholderTextColor?:string;
+    placeholderTextColor?: string;
+    maxLength?: number;
+    multiline?: boolean;
+    textAlignVertical?: "auto" | "top" | "bottom" | "center" | undefined
     lightColor?: string;
     darkColor?: string;
 };
@@ -18,6 +21,9 @@ export function ThemedInput({
     value,
     placeholder,
     placeholderTextColor,
+    maxLength,
+    multiline,
+    textAlignVertical,
     style,
     lightColor,
     darkColor,
@@ -32,6 +38,9 @@ export function ThemedInput({
             value={value}
             placeholder={placeholder}
             placeholderTextColor={placeholderTextColor}
+            maxLength={maxLength}
+            multiline={multiline}
+            textAlignVertical={textAlignVertical}
             style={[
                 { color },
                 style,

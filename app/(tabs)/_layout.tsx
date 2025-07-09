@@ -15,31 +15,32 @@ export default function TabLayout() {
 
   return (
     <Tabs
+      initialRouteName="notes" // Change it back to (tasks) for production.
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: true,
-        tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            position: 'absolute',
-          },
-          default: {},
-        }),
+      tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+      headerShown: true,
+      tabBarButton: HapticTab,
+      tabBarBackground: TabBarBackground,
+      tabBarStyle: Platform.select({
+        ios: {
+        position: 'absolute',
+        },
+        default: {},
+      }),
       }}>
       <Tabs.Screen
-        name="(tasks)"
-        options={{
-          title: 'Tasks',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="checklist.checked" color={color} />,
-        }}
+      name="(tasks)"
+      options={{
+        title: 'Tasks',
+        tabBarIcon: ({ color }) => <IconSymbol size={28} name="checklist.checked" color={color} />,
+      }}
       />
       <Tabs.Screen
-        name="notes"
-        options={{
-          title: 'Notes',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="note" color={color} />,
-        }}
+      name="notes"
+      options={{
+        title: 'Notes',
+        tabBarIcon: ({ color }) => <IconSymbol size={28} name="note" color={color} />,
+      }}
       />
     </Tabs>
   );
