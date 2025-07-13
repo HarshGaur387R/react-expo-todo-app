@@ -1,8 +1,10 @@
+// app/(tabs)/notes/[id].tsx
+
 import { ThemedText } from "@/components/ThemedText";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useLocalSearchParams } from "expo-router";
-import React, { useEffect, useState } from "react";
-import { NativeSyntheticEvent, Pressable, ScrollView, StyleSheet, TextInputChangeEventData } from "react-native";
+import React, { useEffect, useState, useRef } from "react";
+import { ScrollView, StyleSheet } from "react-native";
 import styles from "./styles";
 import { ThemedInput } from "@/components/ThemedInput";
 
@@ -16,145 +18,132 @@ interface NoteType {
 const NotePage = () => {
     const { id } = useLocalSearchParams();
     const [note, setNote] = useState<NoteType | undefined>(undefined);
-    const [noteContent, setNoteContent] = useState<string | undefined>(note?.content);
-    const [noteTitle, setNoteTitle] = useState<string | undefined>(note?.title);
+    const [noteTitle, setNoteTitle] = useState<string>("");
+    const [noteContent, setNoteContent] = useState<string>("");
+    const debounceTimer = useRef<NodeJS.Timeout | null>(null);
 
-    const handleTitleOnChange = (e: NativeSyntheticEvent<TextInputChangeEventData>) => {
-        setNoteTitle(e.nativeEvent.text);
-    }
-
-    const handleContentOnChange = (e: NativeSyntheticEvent<TextInputChangeEventData>) => {
-        setNoteContent(e.nativeEvent.text);
-    }
-
-    const handleOnEditClick = async () => {
-        if (noteContent && noteTitle) {
-            if (noteContent?.length < 1 || noteTitle.length < 1) return;
-        }
-
+    const autoSaveNote = async (updatedTitle: string, updatedContent: string) => {
         try {
-            // const fetchedNotes = await AsyncStorage.getItem('notes');
 
-            // if (fetchedNotes !== null) {
-            //     const parsed = JSON.parse(fetchedNotes);
-            //     await AsyncStorage.setItem('notes', JSON.stringify([...parsed, newNote]))
+            if (!updatedTitle) return;
 
-            //     router.replace("/notes");
-            //     return;
-            // }
+            const fetchedNotes = await AsyncStorage.getItem("notes");
+            if (!fetchedNotes || !note) return;
 
-            // await AsyncStorage.setItem('notes', JSON.stringify([newNote]));
-            // router.replace("/notes");
+            const parsed: NoteType[] = JSON.parse(fetchedNotes);
+            const index = parsed.findIndex((n) => n._id === note._id);
+            if (index === -1) return;
 
+            parsed[index] = {
+                ...parsed[index],
+                title: updatedTitle,
+                content: updatedContent,
+            };
+
+            await AsyncStorage.setItem("notes", JSON.stringify(parsed));
         } catch (error) {
-            console.log('Failed to save notes:', error);
+            console.log("Failed to auto-save note:", error);
         }
-    }
+    };
 
     useEffect(() => {
-        async function fetchNotes() {
+        async function fetchNoteById() {
             try {
-                const fetchedNotes = await AsyncStorage.getItem('notes');
-                if (fetchedNotes !== null) {
-                    const parsedNotes = await JSON.parse(fetchedNotes);
-                    const normalized: NoteType[] = parsedNotes.map((n: NoteType) => {
-                        return {
-                            ...n,
-                            createdAt: new Date(n.createdAt)
-                        }
-                    })
+                const stored = await AsyncStorage.getItem("notes");
+                if (!stored) return;
 
-                    const n: NoteType | undefined = normalized.find((n) => {
-                        return n._id === id
-                    })
+                const parsed: NoteType[] = JSON.parse(stored).map((n: NoteType) => ({
+                    ...n,
+                    createdAt: new Date(n.createdAt),
+                }));
 
-                    setNote(n);
-                    setNoteContent(n?.content);
-                    setNoteTitle(n?.title);
+                const found = parsed.find((n) => n._id === id);
+                if (found) {
+                    setNote(found);
+                    setNoteTitle(found.title);
+                    setNoteContent(found.content);
                 }
-            } catch (error) {
-                console.log('Failed to load notes: ', error);
+            } catch (err) {
+                console.log("Failed to load note:", err);
             }
         }
 
-        fetchNotes();
-    }, [id])
+        fetchNoteById();
+    }, [id]);
+
+    // Debounce & Auto-save when noteTitle or noteContent changes
+    useEffect(() => {
+        if (!note) return;
+
+        if (debounceTimer.current) clearTimeout(debounceTimer.current);
+
+        debounceTimer.current = setTimeout(() => {
+            autoSaveNote(noteTitle, noteContent);
+        }, 500); // Adjust delay if needed
+
+        return () => {
+            if (debounceTimer.current) clearTimeout(debounceTimer.current);
+        };
+    }, [noteTitle, noteContent]);
 
     return (
         <ScrollView contentContainerStyle={styles.notePage}>
-
-            <Pressable style={({ pressed }) => [
-                styles.button,
-                {
-                    opacity: pressed ? 0.7 : 1,
-                    transform: [{ scale: pressed ? 0.97 : 1 }]
-                }]}
-                android_ripple={{ color: '#cccccc', radius: 20 }}
-                onPress={handleOnEditClick}>
-                <ThemedText style={styles.linkText}>Edit</ThemedText>
-            </Pressable>
-
             <ThemedInput
                 autoCorrect={false}
-                onChange={handleTitleOnChange}
+                onChange={(e) => setNoteTitle(e.nativeEvent.text)}
                 value={noteTitle}
                 placeholder="Write Title"
                 style={[customStyle.noteTitle, { minHeight: 50, maxHeight: 50 }]}
-                placeholderTextColor={'gray'}
+                placeholderTextColor={"gray"}
                 maxLength={50}
             />
 
-
             <ThemedInput
                 autoCorrect={false}
-                onChange={handleContentOnChange}
+                onChange={(e) => setNoteContent(e.nativeEvent.text)}
                 value={noteContent}
                 placeholder="Write Your Note Here."
                 style={[customStyle.noteContent, { minHeight: 150 }]}
-                placeholderTextColor={'gray'}
-                multiline={true}
+                placeholderTextColor={"gray"}
+                multiline
                 textAlignVertical="top"
             />
 
-            {/* <ThemedText style={styles.notePageContent}>
-                {note?.content}
-            </ThemedText> */}
-
             <ThemedText style={styles.notePageFooterDate}>
-                {`${note?.createdAt.getDate().toString()}/${note?.createdAt.getMonth().toString()}/${note?.createdAt.getFullYear().toString()}`}
+                {note
+                    ? `${note.createdAt.getDate()}/${note.createdAt.getMonth() + 1}/${note.createdAt.getFullYear()}`
+                    : ""}
             </ThemedText>
 
             <ThemedText style={styles.notePageFooterTime}>
                 {note
-                    ? `${note.createdAt.toLocaleTimeString([], {
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        hour12: true
-                    })}`
+                    ? note.createdAt.toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        hour12: true,
+                    })
                     : ""}
             </ThemedText>
         </ScrollView>
-    )
-}
+    );
+};
 
 const customStyle = StyleSheet.create({
     noteContent: {
-        borderColor: '#888',
+        borderColor: "#888",
         paddingHorizontal: 12,
         paddingVertical: 10,
         fontSize: 16,
-        padding: 10,
-        // backgroundColor:"#d6d3d3",
         borderLeftWidth: 4,
-        borderLeftColor: 'violet'
+        borderLeftColor: "violet",
     },
     noteTitle: {
-        borderColor: '#888',
+        borderColor: "#888",
         paddingHorizontal: 0,
         paddingVertical: 10,
         fontSize: 32,
-        fontWeight:'bold'
-    }
-})
+        fontWeight: "bold",
+    },
+});
 
-export default NotePage
+export default NotePage;
