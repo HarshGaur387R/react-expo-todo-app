@@ -36,6 +36,7 @@ export default function Page() {
         fetchTodos();
     }, []);
 
+    // function to handle on change event & update text state.
     const func = (e: NativeSyntheticEvent<TextInputChangeEventData>) => {
         setText(e.nativeEvent.text);
     }
@@ -45,7 +46,6 @@ export default function Page() {
     };
 
     const addTodo = async (content: string) => {
-
         if (textState.length < 1) return;
 
         const randomStr = Math.random().toString(36).slice(2, 11);
